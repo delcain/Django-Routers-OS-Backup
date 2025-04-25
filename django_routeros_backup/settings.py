@@ -14,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-l40os82g3cpa#6zt96o(0h!2a13z9d30&+w!y3wh-%)ex#+$h='
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -135,7 +135,7 @@ MESSAGE_TAGS = {
 }
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
-CELERY_BROKER_URL = "redis://192.168.100.2:6380/0"
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/15"
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'America/Sao_Paulo'
 

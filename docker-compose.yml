@@ -1,0 +1,34 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: docker/web/Dockerfile
+    container_name: django_web
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+  celery:
+    build:
+      context: .
+      dockerfile: docker/celery/Dockerfile
+    container_name: celery_worker
+    command: celery -A django_routeros_backup worker -l info -P gevent
+    volumes:
+      - .:/app
+    env_file:
+      - .env
+
+  celery-beat:
+    build:
+      context: .
+      dockerfile: docker/celery_beat/Dockerfile
+    container_name: celery_beat
+    command: celery -A django_routeros_backup beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    volumes:
+      - .:/app
+    env_file:
+      - .env
