@@ -135,7 +135,7 @@ MESSAGE_TAGS = {
 }
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/15"
+CELERY_BROKER_URL = "redis://192.168.100.2:6379/15"
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_TIMEZONE = 'America/Sao_Paulo'
 
