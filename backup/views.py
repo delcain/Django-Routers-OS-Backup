@@ -6,7 +6,7 @@ from .models import MikrotikDevice
 from .tasks import async_backup_device
 from .utils import backup_device
 
-@login_required
+@login_required(login_url='/admin/')
 def device_list(request):
     devices = MikrotikDevice.objects.all()
     return render(request, 'device_list.html', {'devices': devices})
