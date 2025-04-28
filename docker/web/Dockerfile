@@ -7,8 +7,9 @@ WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install --upgrade pip && pip install -r requirements.txt
-RUN python3 manage.py migrate
+
 
 COPY . .
+RUN python3 manage.py migrate
 
 CMD ["gunicorn", "django_routeros_backup.wsgi:application", "--bind", "0.0.0.0:8000"]
