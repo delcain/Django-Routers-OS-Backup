@@ -14,13 +14,14 @@ def backup_device(device):
             host=device.dns if device.dns else device.ip_address,
             username=device.username,
             password=device.password,
-            port=device.port,
+            port=device.api_port,
             use_ssl=False,
             plaintext_login=True
         )
+        
         api = connection.get_api()
 
-        filename = f"{device.name}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.rsc"
+        filename = f"{device.name}_{datetime.now().strftime('%Y%m%d_%H%M')}.rsc"
         api.get_resource('/').call('export', {'file': filename})
         # api.get_resource('/system/backup').call('save', {'name': filename})
         connection.disconnect()
@@ -28,7 +29,8 @@ def backup_device(device):
         # Agora faz o download via SFTP
         if device.dns is None:
             device.dns = device.ip_address
-        transport = paramiko.Transport((device.dns, 22))  # Mikrotik precisa de SFTP habilitado
+            device.ssh_port = device.ssh_port
+        transport = paramiko.Transport((device.dns, device.ssh_port))  # Mikrotik precisa de SFTP habilitado
         transport.connect(username=device.username, password=device.password)
         sftp = paramiko.SFTPClient.from_transport(transport)
 
@@ -46,6 +48,11 @@ def backup_device(device):
 
         os.remove(local_path)
 
+        mail_admins(
+            subject=f'Backup realizado com sucesso em {device.name}',
+            message=f'O backup do dispositivo --> {device.name} foi executado com sucesso.',
+                    )
+
         return True
     except Exception as e:
         Backup.objects.create(device=device, status='error')
@@ -55,5 +62,5 @@ def backup_device(device):
             message=f'O backup do dispositivo --> {device.name} <-- ({device.ip_address}) falhou.\n\nErro: {str(e)}'
                     )
         
-        print(f"Falha no backup do dispositivo {device.name}. \nO backup do dispositivo {device.name} ({device.ip_address}) falhou.")
+        print(f"Falha no backup do dispositivo {device.name}. \nErro: {str(e)}")
         return False

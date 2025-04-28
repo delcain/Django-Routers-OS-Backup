@@ -4,7 +4,8 @@ class MikrotikDevice(models.Model):
     name = models.CharField(max_length=100)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     dns = models.CharField(max_length=100, null=True, blank=True)
-    port = models.IntegerField(default=8728)
+    api_port = models.IntegerField(default=8728)
+    ssh_port = models.IntegerField(default=22)
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)  # Encrypt in production
     created_at = models.DateTimeField(auto_now_add=True)
