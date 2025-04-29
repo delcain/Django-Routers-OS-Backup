@@ -48,11 +48,6 @@ def backup_device(device):
 
         os.remove(local_path)
 
-        mail_admins(
-            subject=f'Backup realizado com sucesso em {device.name}',
-            message=f'O backup do dispositivo --> {device.name} foi executado com sucesso.',
-                    )
-
         return True
     except Exception as e:
         Backup.objects.create(device=device, status='error')

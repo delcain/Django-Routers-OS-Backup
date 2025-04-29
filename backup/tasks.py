@@ -20,13 +20,7 @@ def schedule_all_backups(*args, **kwargs):
         for device in MikrotikDevice.objects.all():
             device_id = device.id
             async_backup_device.delay(device_id)
-
-            send_mail(
-            subject=f'[Backup Mikrotik] Tarefa iniciada com sucesso',
-            message=f'backups iniciados com sucesso.',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[admin_email for _, admin_email in settings.ADMINS],
-        )
+            
     except Exception as e:
         error_msg = traceback.format_exc()
         send_mail(
