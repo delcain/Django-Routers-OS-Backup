@@ -8,6 +8,7 @@ class MikrotikDevice(models.Model):
     ssh_port = models.IntegerField(default=22)
     username = models.CharField(max_length=100)
     password = models.CharField(max_length=100)  # Encrypt in production
+    version = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
