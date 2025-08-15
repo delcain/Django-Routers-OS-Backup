@@ -1,11 +1,13 @@
+import os
 import paramiko
 from django.core.files.base import ContentFile
 from .models import Backup
 from datetime import datetime
-from routeros_api import RouterOsApiPool
-import os
+from django.utils.timezone import now
+
 from django.core.mail import mail_admins
 
+from routeros_api import RouterOsApiPool
 
 def backup_device(device):
     try:
@@ -18,12 +20,21 @@ def backup_device(device):
             use_ssl=False,
             plaintext_login=True
         )
-        
         api = connection.get_api()
+
+        system_resource = api.get_resource('/system/resource')
+        resource_info = system_resource.get()
+        
+        if resource_info and 'version' in resource_info[0]:
+
+            device.version = resource_info[0]['version']
+            print(device.version)
+            device.save(update_fields=['version'])
+
+
 
         filename = f"{device.name}_{datetime.now().strftime('%Y%m%d_%H%M')}.rsc"
         api.get_resource('/').call('export', {'file': filename})
-        # api.get_resource('/system/backup').call('save', {'name': filename})
         connection.disconnect()
 
         # Agora faz o download via SFTP

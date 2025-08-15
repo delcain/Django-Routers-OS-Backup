@@ -1,5 +1,5 @@
 import librouteros
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from .utils import checa_versao, download_update, upgrade_firmware
@@ -8,8 +8,8 @@ from backup.models import MikrotikDevice, Backup
 
 @login_required
 def upgrade_home(request):
-    mk = MikrotikDevice.objects.all()
-    return render(request, 'upgrade/home.html')
+    mk = MikrotikDevice.objects.all().order_by('version')
+    return render(request, 'upgrade/home.html', {'mk': mk})
 
 @login_required
 def upgrade_by_id(request, device_id):

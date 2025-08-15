@@ -25,6 +25,8 @@
             <tr class="bg-gray-200">
                 <th class="p-3">Nome</th>
                 <th class="p-3">DNS</th>
+                <th class="p-3">Versão</th>
+                <th class="p-3">Porta API</th>
                 <th class="p-3">Ação</th>
             </tr>
         </thead>
@@ -33,6 +35,8 @@
             <tr class="border-b hover:bg-gray-50">
                 <td class="p-3 font-medium">{{ device.name }}</td>
                 <td class="p-3">{{ device.dns }}</td>
+                <td class="p-3">{{ device.version }}</td>
+                <td class="p-3">{{ device.api_port }}</td>
                 <td class="p-3">
                     <div class="flex gap-2">
                         <form action="{% url 'run_backup' device.id %}" method="post">
@@ -42,7 +46,15 @@
                                 Executar Backup
                             </button>
                         </form>
-                
+
+                        <form action="{% url 'upgrade_by_id' device.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit"
+                                    class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg transition">
+                                Atualizar Versão
+                            </button>
+                        </form>
+
                         <button type="button"
                                 onclick="window.location.href='{% url 'backup_history' device.id %}'"
                                 class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition">
